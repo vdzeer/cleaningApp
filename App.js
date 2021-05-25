@@ -1,10 +1,29 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import { Provider } from 'react-redux';
+import { store } from './src/redux';
+
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import Login from './src/screens/Login';
+import Register from './src/screens/Register';
+
+const Stack = createStackNavigator();
 
 const App = () => {
-  return <View />;
+  return (
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{ headerShown: false }}
+          initialRouteName={Login}>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
+  );
 };
-
-const styles = StyleSheet.create({});
 
 export default App;
