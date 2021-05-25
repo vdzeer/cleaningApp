@@ -25,7 +25,7 @@ const Register = ({ navigation }) => {
 
   useEffect(() => {
     const token = user?.token;
-    // navigate to home screen
+    if (token !== undefined) navigation.navigate('Home');
   }, [user]);
 
   const onTapRegister = () => {

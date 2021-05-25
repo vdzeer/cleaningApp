@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Alert,
+  Text,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
 import TextField from '../components/TextField';
 import Button from '../components/Button';
@@ -14,12 +21,11 @@ const Login = ({ navigation }) => {
   const dispatch = useDispatch();
   const { user, error } = useSelector(state => state.userReducer);
 
-  const token = user?.token;
-
   useEffect(() => {
+    const token = user?.token;
     if (!user) Alert.alert('Error!', "User doesn't exist or wrong password");
     else if (token !== undefined) {
-      // navigate to home screen
+      navigation.navigate('Home');
     }
   }, [user]);
 
@@ -35,19 +41,21 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.loginView}>
-        <Text style={styles.text}>Login</Text>
-        <TextField placeholder="Email" onTextChange={setEmail} />
-        <TextField
-          placeholder="Password"
-          onTextChange={setPassword}
-          isSecure={true}
-        />
-        <Button text={'Sign In'} onBtnPress={onTapLogin} />
-        <Button text={'Sing Up'} onBtnPress={onTapRegister} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <View style={styles.loginView}>
+          <Text style={styles.text}>Login</Text>
+          <TextField placeholder="Email" onTextChange={setEmail} />
+          <TextField
+            placeholder="Password"
+            onTextChange={setPassword}
+            isSecure={true}
+          />
+          <Button text={'Sign In'} onBtnPress={onTapLogin} />
+          <Button text={'Sing Up'} onBtnPress={onTapRegister} />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
