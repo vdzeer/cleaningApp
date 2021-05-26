@@ -55,3 +55,11 @@ export const onRegister = (email, password) => {
     }
   };
 };
+
+export const onChangeMoney = money => {
+  return async dispatch =>
+    dispatch({
+      type: 'ON_CHANGE_MONEY',
+      payload: money,
+    });
+};

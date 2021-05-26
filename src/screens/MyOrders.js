@@ -4,63 +4,72 @@ import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { onChangeMoney } from '../redux';
 
-import Button from '../components/Button';
 import ServicesContainer from '../components/ServicesContainer';
 
-const Cleaner = ({ route, navigation }) => {
-  const { id } = route.params;
-
+const MyOrders = ({ navigation }) => {
   const dispatch = useDispatch();
   const { user, money } = useSelector(state => state.userReducer);
+  // Запрос
 
   const [userMoney, setUserMoney] = useState(money);
-  const [userOrder, setUserOrder] = useState([]);
+  const [userOrder, setUserOrder] = useState([
+    {
+      _id: 0,
+      nameOfCleaner: 'Zakhar cleaning',
+      name: 'ggwp asdads as asd ad asd ',
+      price: 30,
+      status: 'Waiting',
+    },
+    {
+      _id: 1,
+      nameOfCleaner: 'Vadim',
+      name: 'ggwp',
+      price: 30,
+      status: 'Waiting',
+    },
+    {
+      _id: 2,
+      nameOfCleaner: 'Maks',
+      name: 'ggwp',
+      price: 30,
+      status: 'Finished',
+    },
+  ]);
 
-  const addService = service => {
-    setUserOrder(prevOrder => [...prevOrder, service]);
-    setUserMoney(prevMoney => (prevMoney -= service.price));
-  };
+  useEffect(() => dispatch(onChangeMoney(userMoney)), [userMoney]);
 
-  const onCreateOrder = () =>
-    Alert.alert(
-      'Order list',
-      userOrder.reduce(
-        (acc, item) => (acc += `${item.name} : ${item.price}\n`),
-        '',
-      ),
-      [
-        {
-          text: 'Cancel',
-          onPress: () => {
-            setUserMoney(money);
-            setUserOrder([]);
-          },
+  const dellOrder = service =>
+    Alert.alert('Order list', 'Delete this order?', [
+      {
+        text: 'Cancel',
+      },
+      {
+        text: 'Submit',
+        onPress: () => {
+          setUserMoney(prevMoney => (prevMoney += service.price));
+          setUserOrder(prevOrder =>
+            prevOrder.filter(item => item._id !== service._id),
+          );
+
+          // отправка в БД
         },
-        {
-          text: 'Submit',
-          onPress: () => {
-            dispatch(onChangeMoney(userMoney));
-            // отправка в БД
-            navigation.navigate('Home');
-          },
-        },
-      ],
-    );
+      },
+    ]);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Zakhar cleaner</Text>
+        <Text style={styles.headerText}>My orders</Text>
       </View>
 
       <View style={styles.body}>
         <Text style={styles.moneyText}>Your money: {userMoney}</Text>
 
-        <ServicesContainer id={id} editServices={addService} btnText={'Add'} />
-
-        {userOrder.length !== 0 && (
-          <Button text={'Create order'} onBtnPress={onCreateOrder} />
-        )}
+        <ServicesContainer
+          editServices={dellOrder}
+          userServices={userOrder}
+          btnText={'Delete'}
+        />
       </View>
 
       <View style={styles.footer}>
@@ -78,7 +87,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    backgroundColor: '#295FED',
+    backgroundColor: '#333',
     justifyContent: 'center',
   },
   headerText: {
@@ -96,7 +105,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    backgroundColor: '#295FED',
+    backgroundColor: '#333',
     alignItems: 'center',
     justifyContent: 'space-around',
     flexDirection: 'row',
@@ -110,4 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Cleaner;
+export default MyOrders;

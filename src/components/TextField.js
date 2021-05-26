@@ -1,14 +1,22 @@
 import React from 'react';
 import { View, StyleSheet, TextInput } from 'react-native';
 
-const TextField = ({ placeholder, isSecure = false, onTextChange }) => {
+const TextField = ({
+  placeholder,
+  isSecure = false,
+  editable = true,
+  onTextChange,
+  value = '',
+}) => {
   return (
     <View style={styles.container}>
       <TextInput
         placeholder={placeholder}
+        defaultValue={value}
         secureTextEntry={isSecure}
         onChangeText={text => onTextChange(text)}
         style={styles.textField}
+        editable={editable}
       />
     </View>
   );

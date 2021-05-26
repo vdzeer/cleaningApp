@@ -1,5 +1,6 @@
 const initialState = {
   user: { id: 123 },
+  money: 213,
   error: null,
 };
 
@@ -9,11 +10,18 @@ const UserReducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.payload,
+        money: Math.floor(Math.random() * 500),
       };
     case 'ON_REGISTER':
       return {
         ...state,
         user: action.payload,
+        money: Math.floor(Math.random() * 500),
+      };
+    case 'ON_CHANGE_MONEY':
+      return {
+        ...state,
+        money: action.payload,
       };
     case 'ON_ERROR':
       return {

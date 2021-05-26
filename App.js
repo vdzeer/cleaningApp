@@ -10,6 +10,8 @@ import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import Home from './src/screens/Home';
 import Cleaner from './src/screens/Cleaner';
+import MyOrders from './src/screens/MyOrders';
+import Admin from './src/screens/Admin';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +26,8 @@ const App = () => {
           <Stack.Screen name="Register" component={Register} /> */}
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Cleaner" component={Cleaner} />
+          <Stack.Screen name="MyOrders" component={MyOrders} />
+          <Stack.Screen name="Admin" component={Admin} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -52,7 +52,6 @@ const CleanersContainer = ({ navigation }) => {
         name={item.name}
         gallery={item.gallery}
         onCleanerPress={() => onCleanerPress(item._id)}
-        // key={item._id}
       />
     );
   };

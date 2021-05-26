@@ -1,37 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import { useSelector } from 'react-redux';
-
-import CleanersContainer from '../components/CleanersContainer';
+import Button from '../components/Button';
+import AddCleaner from '../components/AddCleaner';
 
 const Home = ({ navigation }) => {
-  const { user } = useSelector(state => state.userReducer);
+  const [btnNum, setBtnNum] = useState(0);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Dry cleaners</Text>
+        <Text style={styles.headerText}>Admin Panel</Text>
       </View>
 
       <View style={styles.body}>
-        <CleanersContainer navigation={navigation} />
+        {!btnNum ? (
+          <>
+            <Button text={'Users orders'} onBtnPress={() => setBtnNum(1)} />
+            <Button text={'Edit cleaners'} onBtnPress={() => setBtnNum(2)} />
+            <Button text={'Add cleaner'} onBtnPress={() => setBtnNum(3)} />
+          </>
+        ) : null}
+        {btnNum === 1 ? null : null}
+        {btnNum === 2 ? null : null}
+        {btnNum === 3 ? <AddCleaner setBtnNum={setBtnNum} /> : null}
       </View>
 
       <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.footerBtn}
-          onPress={() => navigation.navigate('MyOrders')}>
-          <Text style={styles.footerText}>My Orders</Text>
+          onPress={() => (btnNum ? setBtnNum(0) : navigation.goBack())}>
+          <Text style={styles.footerText}>
+            {btnNum ? 'Back' : 'To home page'}
+          </Text>
         </TouchableOpacity>
-
-        {user.role !== 'ADMIN' && (
-          <TouchableOpacity
-            style={styles.footerBtn}
-            onPress={() => navigation.navigate('Admin')}>
-            <Text style={styles.footerText}>Admin Panel</Text>
-          </TouchableOpacity>
-        )}
       </View>
     </View>
   );
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     color: '#FFF',
   },
-  body: { flex: 9 },
+  body: { flex: 9, justifyContent: 'center' },
   footer: {
     flex: 1,
     backgroundColor: '#295FED',
