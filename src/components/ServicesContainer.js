@@ -6,7 +6,10 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
+
 import { w } from '../utils/AppConst';
+import { BASE_URL } from '../utils/AppConst';
+import post from '../utils/Fetch';
 
 const ServicesContainer = ({
   id = null,
@@ -14,15 +17,20 @@ const ServicesContainer = ({
   btnText,
   editServices,
 }) => {
-  const services = userServices
-    ? userServices
-    : [
-        { _id: 0, nameOfService: 'ggwp asdads as asd ad asd ', price: 30 },
-        { _id: 1, nameOfService: 'ggwp', price: 30 },
-        { _id: 2, nameOfService: 'ggwp', price: 30 },
-        { _id: 3, nameOfService: 'ggwp', price: 30 },
-        { _id: 4, nameOfService: 'ggwp', price: 30 },
-      ];
+  const [services, setServices] = useState(null);
+
+  const getServices = async () => {
+    const cleaner = await post(`${BASE_URL}/users/getOneCleaner`, 'POST', {
+      id: id,
+    });
+    setServices(cleaner.services);
+  };
+
+  if (userServices) {
+    setServices(userServices);
+  } else {
+    getServices();
+  }
 
   const renderItem = ({ item }) => {
     return (
@@ -52,7 +60,7 @@ const ServicesContainer = ({
     <FlatList
       data={services}
       renderItem={renderItem}
-      keyExtractor={item => item._id}
+      keyExtractor={item => item.id}
       style={styles.list}
     />
   );
@@ -71,7 +79,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomWidth: 1,
   },
-  service: {},
   text: {
     fontSize: 18,
     alignSelf: 'center',

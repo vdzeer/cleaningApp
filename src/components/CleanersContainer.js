@@ -2,51 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 
 import Cleaner from '../components/Cleaner';
+import { BASE_URL } from '../utils/AppConst';
+import post from '../utils/Fetch';
 
 const CleanersContainer = ({ onCleanerPress }) => {
-  const cleaners = [
-    {
-      _id: '1231sqadasd213',
-      name: 'Zakhar cleaning',
-      description: 'This is Zakhar!',
-      services: [],
-      gallery: 'https://source.unsplash.com/1024x768/?nature',
-    },
-    {
-      _id: '324432431sqadasd213',
-      name: 'Vadim cleaning',
-      description: 'This is Zakhar!',
-      services: [],
-      gallery: 'https://source.unsplash.com/1024x768/?nature',
-    },
-    {
-      _id: 'asdads341231sqadasd213',
-      name: 'Maks cleaning',
-      description: 'This is Zakhar!',
-      services: [],
-      gallery: 'https://source.unsplash.com/1024x768/?nature',
-    },
-    {
-      _id: '1asdas31sqadasd213',
-      name: 'Petro cleaning',
-      description: 'This is Zakhar!',
-      services: [],
-      gallery: 'https://source.unsplash.com/1024x768/?nature',
-    },
-    {
-      _id: '1@@@@231sqadasd213',
-      name: 'Danil cleaning',
-      description: 'This is Zakhar!',
-      services: [],
-      gallery: 'https://source.unsplash.com/1024x768/?nature',
-    },
-  ];
+  const [cleaners, setCleaners] = useState([]);
+
+  const getCleaners = async () => {
+    const cleaners = await post(`${BASE_URL}/users/getCleaners`, 'GET');
+    setCleaners(cleaners);
+  };
+
+  useEffect(() => getCleaners(), []);
 
   const renderItem = ({ item }) => {
     return (
       <Cleaner
         name={item.name}
-        gallery={item.gallery}
+        photo={item.photo}
         onCleanerPress={() => onCleanerPress(item._id)}
       />
     );

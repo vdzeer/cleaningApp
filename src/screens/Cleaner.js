@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -6,15 +6,27 @@ import { onChangeMoney } from '../redux';
 
 import Button from '../components/Button';
 import ServicesContainer from '../components/ServicesContainer';
+import { BASE_URL } from '../utils/AppConst';
+import post from '../utils/Fetch';
 
 const Cleaner = ({ route, navigation }) => {
   const { id } = route.params;
 
   const dispatch = useDispatch();
-  const { user, money } = useSelector(state => state.userReducer);
+  const { token, money } = useSelector(state => state.userReducer);
 
   const [userMoney, setUserMoney] = useState(money);
   const [userOrder, setUserOrder] = useState([]);
+  const [cleaner, setCleaner] = useState(null);
+
+  const getCleaner = async () => {
+    const cleaner = await post(`${BASE_URL}/users/getOneCleaner`, 'POST', {
+      id: id,
+    });
+    setCleaner(cleaner);
+  };
+
+  useEffect(() => getCleaner(), []);
 
   const addService = service => {
     setUserOrder(prevOrder => [...prevOrder, service]);
@@ -25,7 +37,7 @@ const Cleaner = ({ route, navigation }) => {
     Alert.alert(
       'Order list',
       userOrder.reduce(
-        (acc, item) => (acc += `${item.name} : ${item.price}\n`),
+        (acc, item) => (acc += `${item.nameOfService} : ${item.price}\n`),
         '',
       ),
       [
@@ -38,9 +50,14 @@ const Cleaner = ({ route, navigation }) => {
         },
         {
           text: 'Submit',
-          onPress: () => {
+          onPress: async () => {
             dispatch(onChangeMoney(userMoney));
-            // отправка в БД
+
+            const newOrder = await post(`${BASE_URL}/users/addOrder`, 'POST', {
+              token: token,
+              order: userOrder,
+            });
+
             navigation.navigate('Home');
           },
         },
@@ -50,11 +67,12 @@ const Cleaner = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Zakhar cleaner</Text>
+        <Text style={styles.headerText}>{cleaner && cleaner.name}</Text>
       </View>
 
       <View style={styles.body}>
-        <Text style={styles.moneyText}>Your money: {userMoney}</Text>
+        <Text style={styles.text}>{cleaner && cleaner.description}</Text>
+        <Text style={styles.text}>Your money: {userMoney}</Text>
 
         <ServicesContainer id={id} editServices={addService} btnText={'Add'} />
 
@@ -89,7 +107,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   body: { flex: 9 },
-  moneyText: {
+  text: {
     fontSize: 20,
     alignSelf: 'center',
     marginTop: 10,

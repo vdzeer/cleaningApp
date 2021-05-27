@@ -1,40 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+} from 'react-native';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { onChangeMoney } from '../redux';
 
-import ServicesContainer from '../components/ServicesContainer';
+import { BASE_URL } from '../utils/AppConst';
+import post from '../utils/Fetch';
+
+import { w } from '../utils/AppConst';
 
 const MyOrders = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { user, money } = useSelector(state => state.userReducer);
-  // Запрос
+  const { token, money } = useSelector(state => state.userReducer);
 
   const [userMoney, setUserMoney] = useState(money);
-  const [userOrder, setUserOrder] = useState([
-    {
-      _id: 0,
-      name: 'Zakhar cleaning',
-      nameOfService: 'ggwp asdads as asd ad asd ',
-      price: 30,
-      status: 'Waiting',
-    },
-    {
-      _id: 1,
-      name: 'Vadim',
-      nameOfService: 'ggwp',
-      price: 30,
-      status: 'Waiting',
-    },
-    {
-      _id: 2,
-      name: 'Maks',
-      nameOfService: 'ggwp',
-      price: 30,
-      status: 'Finished',
-    },
-  ]);
+  const [userOrders, setUserOrders] = useState(null);
+
+  const getUserOrders = async () => {
+    const orders = await post(`${BASE_URL}/users/getOrders`, 'POST', {
+      token: token,
+    });
+    setUserOrders(orders);
+  };
+
+  useEffect(() => getUserOrders(), []);
 
   useEffect(() => dispatch(onChangeMoney(userMoney)), [userMoney]);
 
@@ -45,17 +41,29 @@ const MyOrders = ({ navigation }) => {
       },
       {
         text: 'Submit',
-        onPress: () => {
-          setUserMoney(prevMoney => (prevMoney += service.price));
-          setUserOrder(prevOrder =>
+        onPress: async () => {
+          setUserMoney(
+            prevMoney =>
+              (prevMoney += service.services.reduce(
+                (acc, item) => acc + item.price,
+                0,
+              )),
+          );
+
+          setUserOrders(prevOrder =>
             prevOrder.filter(item => item._id !== service._id),
           );
 
-          // отправка в БД
+          const dellOrder = await post(
+            `${BASE_URL}/users/deleteOrder`,
+            'POST',
+            {
+              id: service._id,
+            },
+          );
         },
       },
     ]);
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -65,11 +73,28 @@ const MyOrders = ({ navigation }) => {
       <View style={styles.body}>
         <Text style={styles.moneyText}>Your money: {userMoney}</Text>
 
-        <ServicesContainer
-          editServices={dellOrder}
-          userServices={userOrder}
-          btnText={'Delete'}
-        />
+        <ScrollView>
+          {userOrders &&
+            userOrders.map((item, index) => (
+              <View style={styles.serviceBlock} key={index}>
+                <View style={styles.service}>
+                  {item.services.map((el, ind) => (
+                    <View key={ind}>
+                      <Text style={styles.textBold}>{el.nameOfService}</Text>
+                      <Text style={styles.textBold}>{el.price}</Text>
+                    </View>
+                  ))}
+
+                  <Text style={styles.text}>{`Status: ${item.status}`}</Text>
+                </View>
+                <View style={styles.addBtn}>
+                  <TouchableOpacity onPress={() => dellOrder(item)}>
+                    <Text style={styles.textBtn}>Delete</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+        </ScrollView>
       </View>
 
       <View style={styles.footer}>
@@ -117,6 +142,34 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     color: '#FFF',
   },
+  serviceBlock: {
+    width: w * 0.95,
+    alignSelf: 'center',
+    marginBottom: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+  },
+  text: {
+    fontSize: 18,
+    alignSelf: 'center',
+  },
+  textBold: {
+    fontSize: 18,
+    alignSelf: 'center',
+    fontWeight: '700',
+  },
+  addBtn: {
+    height: 35,
+    backgroundColor: '#295FED',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderRadius: 20,
+  },
+  textBtn: { fontSize: 16, color: '#FFF' },
 });
 
 export default MyOrders;

@@ -14,10 +14,13 @@ import TextField from '../components/TextField';
 import Button from '../components/Button';
 import { h } from '../utils/AppConst';
 
+import { BASE_URL } from '../utils/AppConst';
+import post from '../utils/Fetch';
+
 const AddCleaner = ({ setBtnNum }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [link, setLink] = useState('');
+  const [photo, setPhoto] = useState('');
   const [services, setServices] = useState([]);
   const [newService, setNewService] = useState('');
   const [newPrice, setNewPrice] = useState(0);
@@ -25,8 +28,8 @@ const AddCleaner = ({ setBtnNum }) => {
   const [stage, setStage] = useState(0);
 
   const onTapNext = () => {
-    if (name === '' || description == '' || link === '')
-      return Alert.alert('Error!', 'Enter name, description or link!');
+    if (name === '' || description == '' || photo === '')
+      return Alert.alert('Error!', 'Enter name, description or photo!');
 
     setStage(1);
   };
@@ -35,7 +38,7 @@ const AddCleaner = ({ setBtnNum }) => {
     if (newService !== '' && +newPrice > 0) {
       setServices(prevServices => [
         ...prevServices,
-        { service: newService, price: newPrice },
+        { nameOfService: newService, price: newPrice },
       ]);
       setNewService('');
       setNewPrice(0);
@@ -50,9 +53,15 @@ const AddCleaner = ({ setBtnNum }) => {
     );
   };
 
-  const onTapAddCleaner = () => {
+  const onTapAddCleaner = async () => {
     setBtnNum(0);
-    // запрос в бд
+
+    await post(`${BASE_URL}/admin/addCleaner`, 'POST', {
+      name: name,
+      description: description,
+      services: services,
+      photo: photo,
+    });
   };
 
   return (
@@ -67,7 +76,7 @@ const AddCleaner = ({ setBtnNum }) => {
                 placeholder="Description"
                 onTextChange={setDescription}
               />
-              <TextField placeholder="Link to image" onTextChange={setLink} />
+              <TextField placeholder="Link to image" onTextChange={setPhoto} />
               <Button text={'Next'} onBtnPress={onTapNext} />
             </>
           ) : (

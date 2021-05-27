@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Image, View, StyleSheet, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import Button from '../components/Button';
-import { w, h } from '../utils/AppConst';
+import { w } from '../utils/AppConst';
 
-const Cleaner = ({ name, gallery, onCleanerPress }) => {
+const Cleaner = ({ name, photo, onCleanerPress }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onCleanerPress}>
       <View>
@@ -13,7 +12,7 @@ const Cleaner = ({ name, gallery, onCleanerPress }) => {
         <Image
           style={styles.img}
           source={{
-            uri: gallery,
+            uri: photo,
           }}
         />
       </View>

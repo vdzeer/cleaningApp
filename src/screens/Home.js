@@ -4,9 +4,21 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import CleanersContainer from '../components/CleanersContainer';
+import { BASE_URL } from '../utils/AppConst';
+import post from '../utils/Fetch';
 
 const Home = ({ navigation }) => {
-  const { user } = useSelector(state => state.userReducer);
+  const { token } = useSelector(state => state.userReducer);
+  const [permission, setPermission] = useState(false);
+
+  const getPermission = async () => {
+    const perm = await post(`${BASE_URL}/admin/havePermission`, 'POST', {
+      token: token,
+    });
+    setPermission(perm);
+  };
+
+  useEffect(() => getPermission(), []);
 
   const onCleanerPress = id => {
     navigation.navigate('Cleaner', { id: id });
@@ -29,7 +41,7 @@ const Home = ({ navigation }) => {
           <Text style={styles.footerText}>My Orders</Text>
         </TouchableOpacity>
 
-        {user.role !== 'ADMIN' && (
+        {permission && (
           <TouchableOpacity
             style={styles.footerBtn}
             onPress={() => navigation.navigate('Admin')}>

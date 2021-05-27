@@ -1,7 +1,6 @@
 const initialState = {
-  user: { id: 123 },
-  money: 213,
-  error: null,
+  token: '',
+  money: 0,
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -9,24 +8,19 @@ const UserReducer = (state = initialState, action) => {
     case 'ON_LOGIN':
       return {
         ...state,
-        user: action.payload,
+        token: action.payload,
         money: Math.floor(Math.random() * 500),
       };
     case 'ON_REGISTER':
       return {
         ...state,
-        user: action.payload,
+        token: action.payload,
         money: Math.floor(Math.random() * 500),
       };
     case 'ON_CHANGE_MONEY':
       return {
         ...state,
         money: action.payload,
-      };
-    case 'ON_ERROR':
-      return {
-        ...state,
-        error: action.payload,
       };
     default:
       return state;

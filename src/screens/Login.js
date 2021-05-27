@@ -10,6 +10,7 @@ import {
 
 import TextField from '../components/TextField';
 import Button from '../components/Button';
+import { validateEmail } from '../utils/Validators';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { onLogin } from '../redux';
@@ -19,21 +20,22 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
-  const { user, error } = useSelector(state => state.userReducer);
+  const { token } = useSelector(state => state.userReducer);
 
   useEffect(() => {
-    const token = user?.token;
-    if (!user) Alert.alert('Error!', "User doesn't exist or wrong password");
-    else if (token !== undefined) {
-      navigation.navigate('Home');
-    }
-  }, [user]);
+    if (token !== '') navigation.navigate('Home');
+  }, [token]);
 
   const onTapLogin = () => {
-    if (error) Alert.alert('Error!', error);
-    else if (email === '' || password == '')
+    if (email === '' || password == '')
       Alert.alert('Error!', 'Enter email or password!');
-    else dispatch(onLogin(email, password));
+    else if (!validateEmail(email))
+      Alert.alert('Error!', 'Enter correct email!');
+    else {
+      dispatch(onLogin(email, password));
+      setEmail('');
+      setPassword('');
+    }
   };
 
   const onTapRegister = () => {
@@ -45,8 +47,13 @@ const Login = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.loginView}>
           <Text style={styles.text}>Login</Text>
-          <TextField placeholder="Email" onTextChange={setEmail} />
           <TextField
+            value={email}
+            placeholder="Email"
+            onTextChange={setEmail}
+          />
+          <TextField
+            value={password}
             placeholder="Password"
             onTextChange={setPassword}
             isSecure={true}

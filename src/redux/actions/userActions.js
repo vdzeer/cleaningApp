@@ -1,63 +1,47 @@
-import axios from 'axios';
+import { BASE_URL } from '../../utils/AppConst';
+import post from '../../utils/Fetch';
 
 export const onLogin = (email, password) => {
   return async dispatch => {
     try {
-      const response = axios.post(`${2}/login`, {
-        email,
-        password,
+      const data = await post(`${BASE_URL}/auth/login`, 'POST', {
+        email: email,
+        password: password,
       });
 
-      if (!response) {
-        dispatch({
-          type: 'ON_ERROR',
-          payload: 'Login issue!',
-        });
-      } else {
+      if (data)
         dispatch({
           type: 'ON_LOGIN',
-          payload: response.data,
+          payload: data,
         });
-      }
     } catch (error) {
-      dispatch({
-        type: 'ON_ERROR',
-        payload: error,
-      });
+      console.log(error);
     }
   };
 };
 
-export const onRegister = (email, password) => {
+export const onRegister = (email, username, password) => {
   return async dispatch => {
     try {
-      const response = axios.post(`${2}/register`, {
-        email,
-        password,
+      const data = await post(`${BASE_URL}/auth/reg`, 'POST', {
+        email: email,
+        username: username,
+        password: password,
       });
 
-      if (!response) {
-        dispatch({
-          type: 'ON_ERROR',
-          payload: 'Registration issue!',
-        });
-      } else {
+      if (data)
         dispatch({
           type: 'ON_REGISTER',
-          payload: response.data,
+          payload: data,
         });
-      }
     } catch (error) {
-      dispatch({
-        type: 'ON_ERROR',
-        payload: error,
-      });
+      console.log(error);
     }
   };
 };
 
 export const onChangeMoney = money => {
-  return async dispatch =>
+  return dispatch =>
     dispatch({
       type: 'ON_CHANGE_MONEY',
       payload: money,

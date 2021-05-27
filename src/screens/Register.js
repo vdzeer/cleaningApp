@@ -17,28 +17,27 @@ import { onRegister } from '../redux';
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
 
   const dispatch = useDispatch();
-  const { user, error } = useSelector(state => state.userReducer);
+  const { token } = useSelector(state => state.userReducer);
 
   useEffect(() => {
-    const token = user?.token;
-    if (token !== undefined) navigation.navigate('Home');
-  }, [user]);
+    if (token !== '') navigation.navigate('Home');
+  }, [token]);
 
   const onTapRegister = () => {
-    if (error) Alert.alert('Error!', error);
-    else if (email === '' || password == '')
-      Alert.alert('Error!', 'Enter email or password!');
+    if (email === '' || password === '' || username === '')
+      Alert.alert('Error!', 'Enter email, name or password!');
     else if (!validateEmail(email))
       Alert.alert('Error!', 'Enter correct email!');
-    else if (password.length < 6 || password.length > 16)
-      Alert.alert('Error!', 'Password must be > 5 and < 16 characters!');
+    else if (password.length < 6 || password.length > 25)
+      Alert.alert('Error!', 'Password must be > 5 and < 26 characters!');
     else if (password !== rePassword)
       Alert.alert('Error!', 'Password mismatch!');
-    else dispatch(onRegister(email, password));
+    else dispatch(onRegister(email, username, password));
   };
 
   const onTapLogin = () => {
@@ -51,6 +50,8 @@ const Register = ({ navigation }) => {
         <View style={styles.loginView}>
           <Text style={styles.text}>Registration</Text>
           <TextField placeholder="Email" onTextChange={setEmail} />
+          <TextField placeholder="Name" onTextChange={setUsername} />
+
           <TextField
             placeholder="Password"
             onTextChange={setPassword}
