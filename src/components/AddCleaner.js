@@ -16,7 +16,7 @@ import { h } from '../utils/AppConst';
 
 const AddCleaner = ({ setBtnNum }) => {
   const [name, setName] = useState('');
-  const [descriprion, setDescription] = useState('');
+  const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
   const [services, setServices] = useState([]);
   const [newService, setNewService] = useState('');
@@ -25,8 +25,8 @@ const AddCleaner = ({ setBtnNum }) => {
   const [stage, setStage] = useState(0);
 
   const onTapNext = () => {
-    if (name === '' || descriprion == '' || link === '')
-      return Alert.alert('Error!', 'Enter name, descriprion or link!');
+    if (name === '' || description == '' || link === '')
+      return Alert.alert('Error!', 'Enter name, description or link!');
 
     setStage(1);
   };

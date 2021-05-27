@@ -15,22 +15,22 @@ const MyOrders = ({ navigation }) => {
   const [userOrder, setUserOrder] = useState([
     {
       _id: 0,
-      nameOfCleaner: 'Zakhar cleaning',
-      name: 'ggwp asdads as asd ad asd ',
+      name: 'Zakhar cleaning',
+      nameOfService: 'ggwp asdads as asd ad asd ',
       price: 30,
       status: 'Waiting',
     },
     {
       _id: 1,
-      nameOfCleaner: 'Vadim',
-      name: 'ggwp',
+      name: 'Vadim',
+      nameOfService: 'ggwp',
       price: 30,
       status: 'Waiting',
     },
     {
       _id: 2,
-      nameOfCleaner: 'Maks',
-      name: 'ggwp',
+      name: 'Maks',
+      nameOfService: 'ggwp',
       price: 30,
       status: 'Finished',
     },

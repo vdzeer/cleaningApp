@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 import Button from '../components/Button';
+import UsersOrders from '../components/UsersOrders';
+import Cleaners from '../components/Cleaners';
 import AddCleaner from '../components/AddCleaner';
 
 const Home = ({ navigation }) => {
@@ -21,8 +23,8 @@ const Home = ({ navigation }) => {
             <Button text={'Add cleaner'} onBtnPress={() => setBtnNum(3)} />
           </>
         ) : null}
-        {btnNum === 1 ? null : null}
-        {btnNum === 2 ? null : null}
+        {btnNum === 1 ? <UsersOrders /> : null}
+        {btnNum === 2 ? <Cleaners /> : null}
         {btnNum === 3 ? <AddCleaner setBtnNum={setBtnNum} /> : null}
       </View>
 

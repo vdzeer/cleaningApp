@@ -8,6 +8,10 @@ import CleanersContainer from '../components/CleanersContainer';
 const Home = ({ navigation }) => {
   const { user } = useSelector(state => state.userReducer);
 
+  const onCleanerPress = id => {
+    navigation.navigate('Cleaner', { id: id });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -15,7 +19,7 @@ const Home = ({ navigation }) => {
       </View>
 
       <View style={styles.body}>
-        <CleanersContainer navigation={navigation} />
+        <CleanersContainer onCleanerPress={onCleanerPress} />
       </View>
 
       <View style={styles.footer}>

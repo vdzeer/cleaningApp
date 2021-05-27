@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList } from 'react-native';
 
 import Cleaner from '../components/Cleaner';
 
-const CleanersContainer = ({ navigation }) => {
+const CleanersContainer = ({ onCleanerPress }) => {
   const cleaners = [
     {
       _id: '1231sqadasd213',
@@ -41,10 +41,6 @@ const CleanersContainer = ({ navigation }) => {
       gallery: 'https://source.unsplash.com/1024x768/?nature',
     },
   ];
-
-  const onCleanerPress = id => {
-    navigation.navigate('Cleaner', { id: id });
-  };
 
   const renderItem = ({ item }) => {
     return (

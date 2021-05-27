@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Button from '../components/Button';
 import { w, h } from '../utils/AppConst';
 
-const Home = ({ name, gallery, onCleanerPress }) => {
+const Cleaner = ({ name, gallery, onCleanerPress }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onCleanerPress}>
       <View>
@@ -46,4 +46,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Cleaner;

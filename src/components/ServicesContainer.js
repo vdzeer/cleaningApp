@@ -17,11 +17,11 @@ const ServicesContainer = ({
   const services = userServices
     ? userServices
     : [
-        { _id: 0, name: 'ggwp asdads as asd ad asd ', price: 30 },
-        { _id: 1, name: 'ggwp', price: 30 },
-        { _id: 2, name: 'ggwp', price: 30 },
-        { _id: 3, name: 'ggwp', price: 30 },
-        { _id: 4, name: 'ggwp', price: 30 },
+        { _id: 0, nameOfService: 'ggwp asdads as asd ad asd ', price: 30 },
+        { _id: 1, nameOfService: 'ggwp', price: 30 },
+        { _id: 2, nameOfService: 'ggwp', price: 30 },
+        { _id: 3, nameOfService: 'ggwp', price: 30 },
+        { _id: 4, nameOfService: 'ggwp', price: 30 },
       ];
 
   const renderItem = ({ item }) => {
@@ -29,7 +29,9 @@ const ServicesContainer = ({
       <View style={styles.serviceBlock}>
         <View style={styles.service}>
           <Text style={styles.textBold}>
-            {userServices ? `${item.nameOfCleaner}: ${item.name}` : item.name}
+            {userServices
+              ? `${item.name}: ${item.nameOfService}`
+              : item.nameOfService}
           </Text>
           <Text style={styles.text}>
             {userServices
