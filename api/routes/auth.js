@@ -12,5 +12,6 @@ router.post('/reg', [
 ]);
 router.post('/login', AuthController.login);
 router.post('/reset', AuthController.reset);
+router.post('/updateUser', AuthController.updateUser);
 
 module.exports = router;

@@ -29,6 +29,9 @@ const Cleaner = ({ route, navigation }) => {
   useEffect(() => getCleaner(), []);
 
   const addService = service => {
+    if (userMoney - service.price < 0)
+      return Alert.alert('Error', "You haven't enougth money!");
+
     setUserOrder(prevOrder => [...prevOrder, service]);
     setUserMoney(prevMoney => (prevMoney -= service.price));
   };

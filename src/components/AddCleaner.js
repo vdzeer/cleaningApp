@@ -81,13 +81,27 @@ const AddCleaner = ({ setBtnNum }) => {
             </>
           ) : (
             <>
+              <View>
+                <TextField
+                  value={newService}
+                  placeholder="Name of service"
+                  onTextChange={setNewService}
+                />
+                <TextField
+                  value={!newPrice ? '' : newPrice}
+                  placeholder={'Price of service'}
+                  onTextChange={setNewPrice}
+                />
+                <Button text={'Add service'} onBtnPress={onTapAddService} />
+              </View>
+
               {services.length !== 0 ? (
                 <ScrollView style={styles.services}>
                   {services.map((item, index) => (
                     <View style={styles.serviceBlock} key={index}>
                       <View>
                         <Text style={{ fontSize: 16 }}>
-                          Name: {item.service}
+                          Name: {item.nameOfService}
                         </Text>
                         <Text style={{ fontSize: 16 }}>
                           Price: {item.price}
@@ -102,19 +116,6 @@ const AddCleaner = ({ setBtnNum }) => {
                 </ScrollView>
               ) : null}
 
-              <View>
-                <TextField
-                  value={newService}
-                  placeholder="Name of service"
-                  onTextChange={setNewService}
-                />
-                <TextField
-                  value={!newPrice ? '' : newPrice}
-                  placeholder={'Price of service'}
-                  onTextChange={setNewPrice}
-                />
-                <Button text={'Add service'} onBtnPress={onTapAddService} />
-              </View>
               {services.length !== 0 ? (
                 <Button text={'Add cleaner'} onBtnPress={onTapAddCleaner} />
               ) : null}

@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport(
     },
   },
   {
-    from: `Together Bot <${cfg.getValue('mailUser')}>`,
+    from: `Bot <${cfg.getValue('mailUser')}>`,
   },
 );
 

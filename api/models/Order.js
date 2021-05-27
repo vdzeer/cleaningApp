@@ -5,6 +5,7 @@ const Order = new Schema({
   date: { type: String, required: true },
   services: { type: Array, required: true },
   status: { type: String, default: 'Waiting' },
+  comment: { type: String },
 });
 
 module.exports = model('Order', Order);

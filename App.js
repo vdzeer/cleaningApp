@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
+import Reset from './src/screens/Reset';
 import Home from './src/screens/Home';
 import Cleaner from './src/screens/Cleaner';
 import MyOrders from './src/screens/MyOrders';
@@ -24,6 +25,7 @@ const App = () => {
           initialRouteName={Login}>
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="Reset" component={Reset} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Cleaner" component={Cleaner} />
           <Stack.Screen name="MyOrders" component={MyOrders} />

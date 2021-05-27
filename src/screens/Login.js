@@ -42,6 +42,10 @@ const Login = ({ navigation }) => {
     navigation.navigate('Register');
   };
 
+  const onTapReset = () => {
+    navigation.navigate('Reset');
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
@@ -60,6 +64,7 @@ const Login = ({ navigation }) => {
           />
           <Button text={'Sign In'} onBtnPress={onTapLogin} />
           <Button text={'Sing Up'} onBtnPress={onTapRegister} />
+          <Button text={'Reset password'} onBtnPress={onTapReset} />
         </View>
       </View>
     </TouchableWithoutFeedback>

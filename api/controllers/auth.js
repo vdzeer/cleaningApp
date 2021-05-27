@@ -53,17 +53,48 @@ class AuthController {
   }
 
   async reset(req, res) {
-    const { email } = req.body;
+    try {
+      const { email } = req.body;
+      const code = Math.round(Math.random() * 99999);
 
-    // допил
+      const user = await User.findOne({ email: email });
 
-    const user = await User.findOne({ email: email });
+      if (!user) {
+        return res
+          .status(400)
+          .send(`Account with email ${email} is not registered!`);
+      }
 
-    if (user) {
-      return res
-        .status(400)
-        .send(`Account with email ${email} is not registered!`);
+      const message = {
+        to: email,
+        subject: `Reset password`,
+        html: `
+          <h2>Your code: ${code}</h2>
+        `,
+      };
+      mailer(message);
+
+      res.json(code);
+    } catch (error) {
+      console.log(error);
     }
+  }
+
+  async updateUser(req, res) {
+    const { email, password } = req.body;
+
+    const hashPswd = bcrypt.hashSync(password, 5);
+
+    await User.updateOne(
+      { email: email },
+      {
+        $set: {
+          password: hashPswd,
+        },
+      },
+    );
+
+    res.json('Ok');
   }
 }
 

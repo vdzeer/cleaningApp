@@ -1,4 +1,4 @@
-module.exports = async function post(url = '', method, data = {}) {
+module.exports = async function Fetch(url = '', method, data = {}) {
   let response = {};
   if (method == 'GET') {
     await fetch(url, {

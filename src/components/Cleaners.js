@@ -16,51 +16,61 @@ import TextField from './TextField';
 import Button from './Button';
 import CleanersContainer from './CleanersContainer';
 
+import { BASE_URL } from '../utils/AppConst';
+import post from '../utils/Fetch';
+
 const Cleaners = () => {
   const [cleanerID, setCleanerID] = useState(0);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [services, setServices] = useState('');
-  const [gallery, setGallery] = useState('');
+  const [photo, setPhoto] = useState('');
   const [newService, setNewService] = useState('');
   const [newPrice, setNewPrice] = useState(0);
 
   const [stage, setStage] = useState(0);
 
-  useEffect(() => {
-    setName('Zakhar cleaning');
-    setDescription('This is Zakhar!');
-    setServices([
-      { _id: 0, nameOfService: 'ggwp asdads as asd ad asd ', price: 30 },
-      { _id: 1, nameOfService: 'ggwp', price: 30 },
-      { _id: 2, nameOfService: 'ggwp', price: 30 },
-      { _id: 3, nameOfService: 'ggwp', price: 30 },
-      { _id: 4, nameOfService: 'ggwp', price: 30 },
-    ]);
-    setGallery('https://source.unsplash.com/1024x768/?nature');
-  }, [cleanerID]);
+  const getCleaner = async () => {
+    const cleaner = await post(`${BASE_URL}/users/getOneCleaner`, 'POST', {
+      id: cleanerID,
+    });
+    setName(cleaner.name);
+    setDescription(cleaner.description);
+    setServices(cleaner.services);
+    setPhoto(cleaner.photo);
+  };
+
+  useEffect(() => getCleaner(), [cleanerID]);
 
   const onCleanerPress = id => {
     setCleanerID(id);
   };
 
   const onTapNext = () => {
-    if (name === '' || description == '' || gallery === '')
-      return Alert.alert('Error!', 'Enter name, descriprion or gallery!');
+    if (name === '' || description == '' || photo === '')
+      return Alert.alert('Error!', 'Enter name, descriprion or photo!');
 
     setStage(1);
   };
 
-  const onTapDelete = () => {
-    // запрос в бд
+  const onTapDelete = async () => {
+    const id = cleanerID;
     setCleanerID(0);
+
+    const deletedCleaner = await post(
+      `${BASE_URL}/admin/deleteCleaner`,
+      'POST',
+      {
+        id: id,
+      },
+    );
   };
 
   const onTapAddService = () => {
     if (newService !== '' && +newPrice > 0) {
       setServices(prevServices => [
         ...prevServices,
-        { service: newService, price: newPrice },
+        { nameOfService: newService, price: newPrice },
       ]);
       setNewService('');
       setNewPrice(0);
@@ -75,17 +85,29 @@ const Cleaners = () => {
     );
   };
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     if (
       name === '' ||
       description === '' ||
       services.length === 0 ||
-      gallery === ''
+      photo === ''
     )
       return Alert.alert('Error', 'Please, enter all data!');
 
-    // запрос в бд
+    const id = cleanerID;
     setCleanerID(0);
+
+    const updatedCleaner = await post(
+      `${BASE_URL}/admin/updateCleaner`,
+      'PUT',
+      {
+        id: id,
+        name: name,
+        description: description,
+        services: services,
+        photo: photo,
+      },
+    );
   };
 
   return !cleanerID ? (
@@ -97,13 +119,13 @@ const Cleaners = () => {
           <>
             <TextField value={name} onTextChange={setName} />
             <TextField value={description} onTextChange={setDescription} />
-            <TextField value={gallery} onTextChange={setGallery} />
+            <TextField value={photo} onTextChange={setPhoto} />
             <Button text={'To services'} onBtnPress={onTapNext} />
             <Button text={'Delete'} onBtnPress={onTapDelete} />
           </>
         ) : (
           <>
-            {services.length !== 0 ? (
+            {services && services.length !== 0 ? (
               <ScrollView style={styles.services}>
                 {services.map((item, index) => (
                   <View style={styles.serviceBlock} key={index}>

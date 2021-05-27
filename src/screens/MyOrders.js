@@ -42,13 +42,14 @@ const MyOrders = ({ navigation }) => {
       {
         text: 'Submit',
         onPress: async () => {
-          setUserMoney(
-            prevMoney =>
-              (prevMoney += service.services.reduce(
-                (acc, item) => acc + item.price,
-                0,
-              )),
-          );
+          if (
+            service.status.toLowerCase() === 'return' ||
+            service.status.toLowerCase() === 'waiting'
+          )
+            setUserMoney(
+              userMoney +
+                service.services.reduce((acc, item) => acc + +item.price, 0),
+            );
 
           setUserOrders(prevOrder =>
             prevOrder.filter(item => item._id !== service._id),
@@ -86,6 +87,10 @@ const MyOrders = ({ navigation }) => {
                   ))}
 
                   <Text style={styles.text}>{`Status: ${item.status}`}</Text>
+                  {item && item.status.toLowerCase() === 'return' ? (
+                    <Text
+                      style={styles.text}>{`Comment: ${item.comment}`}</Text>
+                  ) : null}
                 </View>
                 <View style={styles.addBtn}>
                   <TouchableOpacity onPress={() => dellOrder(item)}>
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    backgroundColor: '#333',
+    backgroundColor: '#295FED',
     justifyContent: 'center',
   },
   headerText: {
@@ -130,7 +135,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    backgroundColor: '#333',
+    backgroundColor: '#295FED',
     alignItems: 'center',
     justifyContent: 'space-around',
     flexDirection: 'row',

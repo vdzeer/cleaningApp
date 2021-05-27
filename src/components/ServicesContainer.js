@@ -11,12 +11,7 @@ import { w } from '../utils/AppConst';
 import { BASE_URL } from '../utils/AppConst';
 import post from '../utils/Fetch';
 
-const ServicesContainer = ({
-  id = null,
-  userServices = null,
-  btnText,
-  editServices,
-}) => {
+const ServicesContainer = ({ id, btnText, editServices }) => {
   const [services, setServices] = useState(null);
 
   const getServices = async () => {
@@ -26,26 +21,16 @@ const ServicesContainer = ({
     setServices(cleaner.services);
   };
 
-  if (userServices) {
-    setServices(userServices);
-  } else {
+  useEffect(() => {
     getServices();
-  }
+  }, []);
 
   const renderItem = ({ item }) => {
     return (
       <View style={styles.serviceBlock}>
         <View style={styles.service}>
-          <Text style={styles.textBold}>
-            {userServices
-              ? `${item.name}: ${item.nameOfService}`
-              : item.nameOfService}
-          </Text>
-          <Text style={styles.text}>
-            {userServices
-              ? `Price: ${item.price}, status: ${item.status}`
-              : `Price: ${item.price}`}
-          </Text>
+          <Text style={styles.textBold}>{item.nameOfService}</Text>
+          <Text style={styles.text}>{`Price: ${item.price}`}</Text>
         </View>
         <View style={styles.addBtn}>
           <TouchableOpacity onPress={() => editServices(item)}>
@@ -60,7 +45,7 @@ const ServicesContainer = ({
     <FlatList
       data={services}
       renderItem={renderItem}
-      keyExtractor={item => item.id}
+      keyExtractor={item => Math.random() * 100000} // dont have any keys
       style={styles.list}
     />
   );
